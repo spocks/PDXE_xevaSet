@@ -5,10 +5,10 @@ model <- read.csv("data/raw_data/model_info.csv")
 experiment <- read.csv("data/raw_data/expriment.csv")
 drugInfo <- read.csv("data/raw_data/drug_info.csv")
 
-control.drug <- "untreated" 
+control.drug <- "untreated"
 drugs <- unique(model$drug)
 drugs <- drugs[drugs!=control.drug]
-##------create expriment design list 
+##------create expriment design list
 
 expDesign <- list()
 for(p in unique(model$patient.id))
@@ -39,12 +39,12 @@ mutation <- mutation[, sampleNames(mutation)%in%modToBiobaseMap$biobase.id]
 
 
 ##==== create XevaSet ====
-pdxe = createXevaSet(name="PDXE xevaSet", 
-                     model = model, 
-                            drug = drugInfo, 
-                            experiment = experiment, 
-                            expDesign = expDesign, 
-        molecularProfiles=list(RNASeq = RNASeq, 
+pdxe = createXevaSet(name="PDXE xevaSet",
+                     model = model,
+                            drug = drugInfo,
+                            experiment = experiment,
+                            expDesign = expDesign,
+        molecularProfiles=list(RNASeq = RNASeq,
                                mutation=mutation,
                                cnv=cnv),
                             modToBiobaseMap = modToBiobaseMap)
@@ -58,23 +58,12 @@ for(res in c("mRECIST", "slope", "AUC", "angle", "abc", "TGI"))
 
 ##=========subset by tissue type ====
 mi <- modelInfo(pdxe)
-for(tissue in c("Breast Cancer", "Colorectal Cancer", "Cutaneous Melanoma", 
-                "Gastric Cancer", "Non-small Cell Lung Carcinoma", 
+for(tissue in c("Breast Cancer", "Colorectal Cancer", "Cutaneous Melanoma",
+                "Gastric Cancer", "Non-small Cell Lung Carcinoma",
                 "Pancreatic Ductal Carcinoma"))
 {
-  pdxe.tissue <- subsetXeva(pdxe, ids= mi$model.id[mi$tissue.name==tissue], 
+  pdxe.tissue <- subsetXeva(pdxe, ids= mi$model.id[mi$tissue.name==tissue],
                             id.name = "model.id")
   saveRDS(pdxe.tissue, sprintf("data/PDXE_xevaSet/PDXE_%s_XevaSet.rds", gsub(" ", "_", tissue)))
 }
-
-
-
-
-
-
-
-
-
-
-
 
